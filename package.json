@@ -1,6 +1,6 @@
 {
   "name": "promising-help",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A small library of helpful promise-based utilities",
   "homepage": "",
   "author": {
@@ -34,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "rsvp": "^3.1.0",
-    "stack-trace": "0.0.9",
+    "stack-trace": "^0.0.9",
     "type-of": "^2.0.1"
   }
 }
