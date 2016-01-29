@@ -51,7 +51,7 @@ function msg() {
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
-  return resolved();
+  return RSVP.resolve();
 }
 exports.msg = msg;
 
@@ -74,12 +74,12 @@ function errMsg() {
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']\n\n' + traceItems.join('\n'))]));
-  return resolved();
+  return RSVP.resolve();
 }
 exports.errMsg = errMsg;
 
 function stash(saveValue, object, property) {
   object[property] = saveValue;
-  return resolved(saveValue);
+  return RSVP.resolve(saveValue);
 }
 exports.stash = stash;
