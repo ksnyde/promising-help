@@ -1,0 +1,40 @@
+{
+  "name": "promising-help",
+  "version": "0.0.1",
+  "description": "A small library of helpful promise-based utilities",
+  "homepage": "",
+  "author": {
+    "name": "Ken Snyder",
+    "email": "ken@ken.net",
+    "url": ""
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "keywords": [],
+  "repository": "ksnyde/promising-help",
+  "devDependencies": {
+    "gulp": "^3.6.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-istanbul": "^0.9.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^1.0.0",
+    "gulp-nsp": "^2.1.0",
+    "gulp-babel": "^5.1.0",
+    "del": "^2.0.2",
+    "babel-core": "^5.5.0",
+    "isparta": "^3.0.3"
+  },
+  "scripts": {
+    "prepublish": "gulp prepublish",
+    "test": "gulp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "rsvp": "^3.1.0",
+    "stack-trace": "0.0.9",
+    "type-of": "^2.0.1"
+  }
+}
