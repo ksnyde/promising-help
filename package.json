@@ -1,6 +1,6 @@
 {
   "name": "promising-help",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A small library of helpful promise-based utilities",
   "homepage": "",
   "author": {
@@ -15,16 +15,18 @@
   "keywords": [],
   "repository": "ksnyde/promising-help",
   "devDependencies": {
+    "babel-core": "^5.5.0",
+    "chai": "^3.5.0",
+    "chalk": "^1.1.1",
+    "del": "^2.0.2",
     "gulp": "^3.6.0",
+    "gulp-babel": "^5.1.0",
     "gulp-eslint": "^1.0.0",
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^0.9.0",
     "gulp-mocha": "^2.0.0",
-    "gulp-plumber": "^1.0.0",
     "gulp-nsp": "^2.1.0",
-    "gulp-babel": "^5.1.0",
-    "del": "^2.0.2",
-    "babel-core": "^5.5.0",
+    "gulp-plumber": "^1.0.0",
     "isparta": "^3.0.3"
   },
   "scripts": {

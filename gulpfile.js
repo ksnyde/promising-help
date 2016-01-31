@@ -14,19 +14,19 @@ var isparta = require('isparta');
 // when they're loaded
 require('babel-core/register');
 
-gulp.task('static', function () {
-  return gulp.src('**/*.js')
+gulp.task('static', function() {
+  return gulp.src('lib/**/*.js')
     .pipe(excludeGitignore())
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('nsp', function (cb) {
+gulp.task('nsp', function(cb) {
   nsp({package: path.resolve('package.json')}, cb);
 });
 
-gulp.task('pre-test', function () {
+gulp.task('pre-test', function() {
   return gulp.src('lib/**/*.js')
     .pipe(istanbul({
       includeUntested: true,
@@ -35,28 +35,27 @@ gulp.task('pre-test', function () {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function (cb) {
+gulp.task('test', function(cb) {
   var mochaErr;
 
   gulp.src('test/**/*.js')
     .pipe(plumber())
     .pipe(mocha({reporter: 'spec'}))
-    .on('error', function (err) {
+    .on('error', function(err) {
       mochaErr = err;
     })
-    .pipe(istanbul.writeReports())
-    .on('end', function () {
+    .on('end', function() {
       cb(mochaErr);
     });
 });
 
-gulp.task('babel', ['clean'], function () {
+gulp.task('babel', ['clean'], function() {
   return gulp.src('lib/**/*.js')
     .pipe(babel())
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', function() {
   return del('dist');
 });
 

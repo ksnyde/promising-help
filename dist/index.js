@@ -14,9 +14,7 @@ exports.hashSettled = RSVP.hashSettled;
 exports.defer = RSVP.defer;
 
 function resolved(value) {
-  return new RSVP.Promise(function (resolve) {
-    return resolve(value);
-  });
+  return RSVP.resolve(value);
 }
 exports.resolved = resolved;
 
@@ -27,15 +25,28 @@ exports.resolved = resolved;
  * @param  {variant}  proxy   pass input to output
  * @return {Function}
  */
-function logger(message) {
-  return function (value) {
-    var trace = stackTrace.get();
-    var lineNumber = trace[1].getLineNumber();
-    var fileName = trace[1].getFileName().split('/').pop();
-    if (typeOf(message) === 'string') {
-      message = [message];
-    }
+function logger() {
+  for (var _len = arguments.length, message = Array(_len), _key = 0; _key < _len; _key++) {
+    message[_key] = arguments[_key];
+  }
 
+  var trace = stackTrace.get();
+  var lineNumber = undefined;
+  var fileName = undefined;
+
+  if (message.length > 1) {
+    // Explicit call
+    lineNumber = trace[1].getLineNumber();
+    fileName = trace[1].getFileName().split('/').pop();
+    console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
+    return resolved(message.pop());
+  }
+
+  return function () {
+    var value = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+    lineNumber = trace[0].getLineNumber();
+    fileName = trace[0].getFileName().split('/').pop();
     console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
     return value;
   };
@@ -52,8 +63,8 @@ function msg() {
   var lineNumber = trace[1].getLineNumber();
   var fileName = trace[1].getFileName().split('/').pop();
 
-  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
+  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
@@ -75,8 +86,8 @@ function errMsg() {
     traceItems.pushObject(traceItems[i].getFileName() + ' => line ' + traceItems[i].getLineNumber());
   }
 
-  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
+  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    args[_key3] = arguments[_key3];
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']\n\n' + traceItems.join('\n'))]));
@@ -84,8 +95,35 @@ function errMsg() {
 }
 exports.errMsg = errMsg;
 
-function stash(saveValue, object, property) {
-  object[property] = saveValue;
-  return RSVP.resolve(saveValue);
+function stash() {
+  var value = undefined;
+  var target = undefined;
+  var property = undefined;
+
+  for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    args[_key4] = arguments[_key4];
+  }
+
+  switch (args.length) {
+    case 3:
+      value = args[0];
+      target = args[1];
+      property = args[2];
+
+      target[property] = value;
+      return RSVP.resolve(value);
+    case 2:
+      value = args[0];
+      target = args[1];
+
+      if (typeOf(value) === 'object' && typeOf(target) === 'object') {
+        target = Object.assign(target, value);
+      } else if (typeOf(target) === 'array') {
+        target.push(value);
+      } else {
+        throw new Error('invalid use of stash parameters:' + JSON.stringify(args, null, 2));
+      }
+      return RSVP.resolve(value);
+  }
 }
 exports.stash = stash;
