@@ -36,12 +36,12 @@ function logger() {
   var showValue = false;
 
   var fn = function fn(value) {
-    lineNumber = trace[0].getLineNumber();
-    fileName = trace[0].getFileName().split('/').pop();
+    lineNumber = trace[1].getLineNumber();
+    fileName = trace[1].getFileName().split('/').pop();
     if (showValue) {
-      console.log(message, value, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
+      console.log.apply(console, message.concat([value, chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
     } else {
-      console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
+      console.log.apply(console, message.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
     }
 
     return value;
@@ -137,6 +137,7 @@ function stash() {
       if (typeOf(value) === 'object' && typeOf(target) === 'object') {
         target = Object.assign(target, value);
       } else if (typeOf(target) === 'array') {
+        console.log('pushing value: ', value);
         target.push(value);
       } else {
         throw new Error('invalid use of stash parameters:' + JSON.stringify(args, null, 2));
