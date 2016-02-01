@@ -33,25 +33,43 @@ function logger() {
   var trace = stackTrace.get();
   var lineNumber = undefined;
   var fileName = undefined;
+  var showValue = false;
+
+  var fn = function fn(value) {
+    lineNumber = trace[0].getLineNumber();
+    fileName = trace[0].getFileName().split('/').pop();
+    if (showValue) {
+      console.log(message, value, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
+    } else {
+      console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
+    }
+
+    return value;
+  };
 
   if (message.length > 1) {
-    // Explicit call
+    // Explicit signature call
     lineNumber = trace[1].getLineNumber();
     fileName = trace[1].getFileName().split('/').pop();
     console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
     return resolved(message.pop());
   }
 
-  return function () {
-    var value = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-    lineNumber = trace[0].getLineNumber();
-    fileName = trace[0].getFileName().split('/').pop();
-    console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
-    return value;
-  };
+  return fn;
 }
 exports.logger = logger;
+logger.prototype.show = function () {
+  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  return function () {
+    var fn = logger;
+    fn.showValue = true;
+    return fn(args);
+  };
+};
+exports.logger.show = logger.show;
 
 /**
  * Can be used in a promise chain (similar to logger but takes multi-args)
@@ -63,8 +81,8 @@ function msg() {
   var lineNumber = trace[1].getLineNumber();
   var fileName = trace[1].getFileName().split('/').pop();
 
-  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
+  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    args[_key3] = arguments[_key3];
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
@@ -86,8 +104,8 @@ function errMsg() {
     traceItems.pushObject(traceItems[i].getFileName() + ' => line ' + traceItems[i].getLineNumber());
   }
 
-  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-    args[_key3] = arguments[_key3];
+  for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    args[_key4] = arguments[_key4];
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']\n\n' + traceItems.join('\n'))]));
@@ -100,8 +118,8 @@ function stash() {
   var target = undefined;
   var property = undefined;
 
-  for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-    args[_key4] = arguments[_key4];
+  for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    args[_key5] = arguments[_key5];
   }
 
   switch (args.length) {
@@ -127,3 +145,4 @@ function stash() {
   }
 }
 exports.stash = stash;
+//# sourceMappingURL=/Volumes/PEGASUS/repos/mine/promising-help/dist/index.js.map

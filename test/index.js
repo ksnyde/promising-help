@@ -51,6 +51,7 @@ describe('promising-help', function() {
         .then(done)
         .catch(err=> done(new Error(err)));
     });
+
     it('"logger" called directly outputs and proxies value forward when no value present', function(done) {
       let state = 1;
       new Promise(resolve => {
