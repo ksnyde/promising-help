@@ -82,9 +82,13 @@ var _msgContext = undefined;
  * @return {[type]}         [description]
  */
 function msgContext(context) {
-  this._msgContext = '[[' + _.keys(context).map(function (key, index) {
-    return index + ':' + key + ';';
-  }).join(' ') + ']]';
+  if (context) {
+    this._msgContext = '[[' + _.keys(context).map(function (key, index) {
+      return index + ':' + key + ';';
+    }).join(' ') + ']]';
+  } else {
+    this._msgContext = '';
+  }
 }
 
 /**
@@ -101,7 +105,7 @@ function msg() {
     args[_key3] = arguments[_key3];
   }
 
-  console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
+  console.log.apply(console, [this._msgContext].concat(args, [chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
   return RSVP.resolve();
 }
 exports.msg = msg;
@@ -162,4 +166,3 @@ function stash() {
   }
 }
 exports.stash = stash;
-//# sourceMappingURL=/Volumes/PEGASUS/repos/mine/promising-help/dist/index.js.map
