@@ -4,6 +4,7 @@ var RSVP = require('rsvp');
 var stackTrace = require('stack-trace');
 var chalk = require('chalk');
 var typeOf = require('type-of');
+var _ = require('lodash');
 
 // EXPOSE RSVP
 exports.Promise = RSVP.Promise;
@@ -70,6 +71,21 @@ logger.prototype.show = function () {
   };
 };
 exports.logger.show = logger.show;
+
+var _msgContext = undefined;
+/**
+ * Sets a context which will be prefixed to the logging as a string
+ * name/value pairings (comma delimited); this allows for transactions
+ * to be more easily kept together.
+ *
+ * @param  {object} context [description]
+ * @return {[type]}         [description]
+ */
+function msgContext(context) {
+  this._msgContext = '[[' + _.keys(context).map(function (key, index) {
+    return index + ':' + key + ';';
+  }).join(' ') + ']]';
+}
 
 /**
  * Can be used in a promise chain (similar to logger but takes multi-args)
