@@ -5,20 +5,6 @@ var stackTrace = require('stack-trace');
 var chalk = require('chalk');
 var typeOf = require('type-of');
 var _ = require('lodash');
-// test
-
-// EXPOSE RSVP
-exports.Promise = RSVP.Promise;
-exports.all = RSVP.all;
-exports.allSettled = RSVP.allSettled;
-exports.hash = RSVP.hash;
-exports.hashSettled = RSVP.hashSettled;
-exports.defer = RSVP.defer;
-
-function resolved(value) {
-  return RSVP.resolve(value);
-}
-exports.resolved = resolved;
 
 /**
  * Allow logging to stdout in your promise pipeline while allowing for
@@ -54,24 +40,11 @@ function logger() {
     lineNumber = trace[1].getLineNumber();
     fileName = trace[1].getFileName().split('/').pop();
     console.log(message, chalk.grey(' [' + fileName + ': ' + lineNumber + ']'));
-    return resolved(message.pop());
+    return RSVP.resolve(message.pop());
   }
 
   return fn;
 }
-exports.logger = logger;
-logger.prototype.show = function () {
-  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
-
-  return function () {
-    var fn = logger;
-    fn.showValue = true;
-    return fn(args);
-  };
-};
-exports.logger.show = logger.show;
 
 var _msgContext = '';
 /**
@@ -84,11 +57,11 @@ var _msgContext = '';
  */
 function msgContext(context) {
   if (context) {
-    this._msgContext = '[[' + _.keys(context).map(function (key, index) {
+    _msgContext = '[[' + _.keys(context).map(function (key, index) {
       return index + ':' + key + ';';
     }).join(' ') + ']]';
   } else {
-    this._msgContext = '';
+    _msgContext = '';
   }
 }
 
@@ -102,14 +75,13 @@ function msg() {
   var lineNumber = trace[1].getLineNumber();
   var fileName = trace[1].getFileName().split('/').pop();
 
-  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-    args[_key3] = arguments[_key3];
+  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
   }
 
-  console.log.apply(console, [this._msgContext].concat(args, [chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
+  console.log.apply(console, [_msgContext].concat(args, [chalk.grey(' [' + fileName + ': ' + lineNumber + ']')]));
   return RSVP.resolve();
 }
-exports.msg = msg;
 
 /**
  * Can be used in a promise chain (similar to logger but takes multi-args)
@@ -125,22 +97,21 @@ function errMsg() {
     traceItems.pushObject(traceItems[i].getFileName() + ' => line ' + traceItems[i].getLineNumber());
   }
 
-  for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-    args[_key4] = arguments[_key4];
+  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    args[_key3] = arguments[_key3];
   }
 
   console.log.apply(console, args.concat([chalk.grey(' [' + fileName + ': ' + lineNumber + ']\n\n' + traceItems.join('\n'))]));
   return RSVP.resolve();
 }
-exports.errMsg = errMsg;
 
 function stash() {
   var value = undefined;
   var target = undefined;
   var property = undefined;
 
-  for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-    args[_key5] = arguments[_key5];
+  for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    args[_key4] = arguments[_key4];
   }
 
   switch (args.length) {
@@ -166,4 +137,13 @@ function stash() {
       return RSVP.resolve(value);
   }
 }
-exports.stash = stash;
+
+module.exports = {
+  msg: msg,
+  msgContext: msgContext,
+  errMsg: errMsg,
+  logger: logger,
+  stash: stash,
+  Promise: RSVP.Promise,
+  RSVP: RSVP
+};
