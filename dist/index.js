@@ -72,7 +72,7 @@ logger.prototype.show = function () {
 };
 exports.logger.show = logger.show;
 
-var _msgContext = undefined;
+var _msgContext = '';
 /**
  * Sets a context which will be prefixed to the logging as a string
  * name/value pairings (comma delimited); this allows for transactions
