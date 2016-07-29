@@ -131,7 +131,7 @@
     "no-spaced-func": 2,
     "no-trailing-spaces": [1, {"skipBlankLines": true}],
     "no-unused-vars": 1,
-    "no-underscore-dangle": 2,
+    "no-underscore-dangle": 0,
     "semi": 2,
     "semi-spacing": [
       2,

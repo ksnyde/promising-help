@@ -5,6 +5,7 @@ var stackTrace = require('stack-trace');
 var chalk = require('chalk');
 var typeOf = require('type-of');
 var _ = require('lodash');
+// test
 
 // EXPOSE RSVP
 exports.Promise = RSVP.Promise;

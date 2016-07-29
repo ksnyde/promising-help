@@ -14,12 +14,12 @@ var isparta = require('isparta');
 // when they're loaded
 require('babel-core/register');
 
-gulp.task('static', function() {
+gulp.task('lint', function() {
   return gulp.src('lib/**/*.js')
     .pipe(excludeGitignore())
     .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+    .pipe(eslint.format());
+    // .pipe(eslint.failAfterError());
 });
 
 gulp.task('nsp', function(cb) {
@@ -35,7 +35,7 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', function(cb) {
+gulp.task('test', ['lint'], function(cb) {
   var mochaErr;
 
   gulp.src('test/**/*.js')

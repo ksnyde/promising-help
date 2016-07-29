@@ -1,38 +1,63 @@
 import assert from 'assert';
 import promising from '../lib';
 const {Promise, all, hash, hashSettled, allSettled} = promising; //eslint-disable-line no-unused-vars
-const {resolved, defer} = promising; //eslint-disable-line no-unused-vars
-const {msg, errMsg, logger, stash} = promising; //eslint-disable-line no-unused-vars
+const {msg, msgContext, errMsg, logger, stash} = promising; //eslint-disable-line no-unused-vars
 const chai = require('chai');
 const expect = require('chai').expect;
 chai.should();
 
+function captureStream(stream){
+  var oldWrite = stream.write;
+  var buf = '';
+  stream.write = function(chunk, encoding, callback){
+    buf += chunk.toString(); // chunk is a String or Buffer
+    oldWrite.apply(stream, arguments);
+  }
+
+  return {
+    unhook: function unhook(){
+     stream.write = oldWrite;
+    },
+    captured: function(){
+      return buf;
+    }
+  };
+}
+
 describe('promising-help', function() {
-  it('RSVP Promise is exposed', function(done) {
+  it('RSVP Promise is exposed and working', function(done) {
     new Promise((resolve) => {
       resolve();
     })
       .then(() => done())
       .catch(err => done(new Error(err)));
   });
+  it('msg, msgContext, errMsg, logger, and stash are exported', function() {
+    expect(typeof msg).to.equal('function');
+    expect(typeof msgContext).to.equal('function');
+    expect(typeof errMsg).to.equal('function');
+    expect(typeof logger).to.equal('function');
+    expect(typeof stash).to.equal('function');
+  });
 
   it('resolved() function continues promise chain', function(done) {
     let state = [];
-    new Promise(resolve => {
+    let chain = () => {
       state.push('1');
-      resolve();
-    })
+      return Promise.resolve();
+    };
+    chain()
       .then(() => {
         state.push('2');
-        return resolved();
+        return Promise.resolve();
       })
       .then(() => {
         state.push('3');
-        return resolved();
+        return Promise.resolve();
       })
       .then(() => {
         expect(state.length).to.equal(3);
-        return resolved();
+        return Promise.resolve();
       })
       .then(done)
       .catch(err => done(new Error(err)));
@@ -140,5 +165,20 @@ describe('promising-help', function() {
     });
 
   });
+
+  let hook;
+  describe('#msg and msgContext', function() {
+    beforeEach(function() {
+      hook = captureStream(process.stdout);
+    });
+    afterEach(function() {
+      hook.unhook();
+    });
+    it('msg writes to stdout', function() {
+      let value = true;
+      expect(value).to.equal(true);
+    });
+  });
+
 
 });
