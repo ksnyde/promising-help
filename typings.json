@@ -1,0 +1,11 @@
+{
+  "globalDevDependencies": {
+    "gulp-tslint": "registry:dt/gulp-tslint#3.6.0+20160316155526",
+    "gulp-typescript": "registry:dt/gulp-typescript#0.0.0+20160317120654",
+    "merge2": "registry:dt/merge2#0.3.6+20160316155526",
+    "typescript": "registry:dt/typescript#0.4.0+20160317120654"
+  },
+  "globalDependencies": {
+    "bluebird": "registry:dt/bluebird#3.0.0+20161007114152"
+  }
+}
